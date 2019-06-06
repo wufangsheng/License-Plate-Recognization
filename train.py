@@ -62,7 +62,7 @@ path = './data'
 count=__getnum__(path)
 images,labels= __data_label__(path, count)
 
-#Split data into train and test sets at the proportion of 7:3
+#split data into train and test sets at the proportion of 7:3
 X_train, X_test, y_train, y_test = train_test_split(images, labels, test_size=0.3, random_state=30)
 
 #compile the model with Mean Squre Error loss function, RMSprop optimizer
@@ -71,18 +71,17 @@ model.compile(loss='MSE', optimizer='rmsprop', metrics=['accuracy'])
 #save checkpoints
 filepath="model_{epoch:02d}-{val_acc:.2f}.hdf5"
 checkpoint = ModelCheckpoint(os.path.join(save_dir, filepath), monitor='val_acc',verbose=1,save_best_only=True)
-
 history = model.fit(X_train,y_train,batch_size=batch_size,epochs=epochs,shuffle=True,verbose=1,validation_split=0.1)
-
 print(history.history.keys())
-# Save model and weights
+
+#save model and weights
 if not os.path.isdir(save_dir):
     os.makedirs(save_dir)
 model_path = os.path.join(save_dir, model_name)
 model.save(model_path)
 print('Saved trained model at %s ' % model_path)
  
-# Score trained model.
+#score trained model.
 scores = model.evaluate(X_test, y_test, verbose=1)
 print('Test loss:', scores[0])
 print('Test accuracy:', scores[1])
